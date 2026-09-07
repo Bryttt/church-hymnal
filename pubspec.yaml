@@ -1,0 +1,45 @@
+name: hymnal_app
+description: A church hymnal app with offline lyrics, audio, and bookmarks.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+
+  # Local storage for bookmarks (no login/account needed)
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # Audio playback for hymn tunes
+  just_audio: ^0.9.36
+
+  # Native share sheet (copy / share to apps)
+  share_plus: ^7.2.2
+
+  # App splash screen (logo on launch)
+  flutter_native_splash: ^2.3.10
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  hive_generator: ^2.0.1
+  build_runner: ^2.4.8
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/audio/
+    - assets/images/
+
+# Config for flutter_native_splash package.
+# Run `flutter pub run flutter_native_splash:create` after adding your logo.
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/images/church_logo.png
+  color_dark: "#121212"
+  image_dark: assets/images/church_logo.png
