@@ -27,7 +27,7 @@ class AppDrawer extends StatelessWidget {
                   Icon(Icons.church, color: AppColors.white, size: 32),
                   SizedBox(width: 12),
                   Text(
-                    'Church Hymnal',
+                    'ARS Hymnal',
                     style: TextStyle(
                       color: AppColors.white,
                       fontSize: 20,
@@ -39,7 +39,7 @@ class AppDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.menu_book),
-              title: const Text('Mawunyonyo'),
+              title: const Text('Mawunyɔnyɔ / Prayer of Invocation'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.of(context).push(
