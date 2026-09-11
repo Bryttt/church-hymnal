@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import '../data/sample_hymns.dart';
 import '../models/hymn.dart';
 import '../services/bookmark_service.dart';
+import '../services/hymn_repository.dart';
 import '../main.dart' show themeModeNotifier;
 import 'hymn_detail_screen.dart';
 import 'app_drawer.dart';
@@ -11,6 +11,9 @@ import 'app_drawer.dart';
 /// The hamburger icon (top-left) opens app_drawer.dart automatically —
 /// Flutter adds that icon on its own whenever a Scaffold has a `drawer`
 /// and no custom `leading` widget, so no extra wiring is needed here.
+///
+/// Hymn data now loads from assets/data/hymns.txt via HymnRepository
+/// instead of being hardcoded — see _hymnsFuture below.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -20,15 +23,22 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final BookmarkService _bookmarkService = BookmarkService();
+  late final Future<List<Hymn>> _hymnsFuture;
   String _searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _hymnsFuture = HymnRepository.instance.loadHymns();
+  }
 
   /// Matches by hymn number (e.g. "23") OR by any word in the title or
   /// lyrics (e.g. "grace" finds "Amazing Grace").
-  List<Hymn> get _filteredHymns {
+  List<Hymn> _filterHymns(List<Hymn> allHymns) {
     final query = _searchQuery.trim().toLowerCase();
-    if (query.isEmpty) return sampleHymns;
+    if (query.isEmpty) return allHymns;
 
-    return sampleHymns.where((hymn) {
+    return allHymns.where((hymn) {
       final matchesNumber = hymn.number.toString() == query;
       final matchesTitle = hymn.title.toLowerCase().contains(query);
       final matchesLyrics = hymn.lyrics.toLowerCase().contains(query);
@@ -38,12 +48,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final filteredHymns = _filteredHymns;
-
     return Scaffold(
       drawer: const AppDrawer(),
       appBar: AppBar(
-        title: const Text('ARS Hymnal'), 
+        title: const Text('ARS Hymnal'),
         actions: [
           ValueListenableBuilder<ThemeMode>(
             valueListenable: themeModeNotifier,
@@ -62,70 +70,90 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: TextField(
-              decoration: const InputDecoration(
-                hintText: 'Search by hymn number or word',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
+      body: FutureBuilder<List<Hymn>>(
+        future: _hymnsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Text(
+                  'Could not load hymns. Check that assets/data/hymns.txt '
+                  'is listed under pubspec.yaml assets.\n\n'
+                  '${snapshot.error}',
+                  textAlign: TextAlign.center,
+                ),
               ),
-              onChanged: (value) => setState(() => _searchQuery = value),
-            ),
-          ),
-          Expanded(
-            child: ValueListenableBuilder(
-              valueListenable: _bookmarkService.box.listenable(),
-              builder: (context, Box<bool> box, _) {
-                return ListView.separated(
-                  itemCount: filteredHymns.length,
-                  separatorBuilder: (_, __) => const Divider(height: 1),
-                  itemBuilder: (context, index) {
-                    final hymn = filteredHymns[index];
-                    final bookmarked = _bookmarkService.isBookmarked(hymn.number);
-                    return ListTile(
-                      // Number is de-emphasized (grey, smaller) and the
-                      // title carries the visual weight — this is the
-                      // "hierarchy" styling: number is a reference, the
-                      // title is what a reader is actually scanning for.
-                      leading: SizedBox(
-                        width: 36,
-                        child: Text(
-                          '${hymn.number}',
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
+            );
+          }
+
+          final filteredHymns = _filterHymns(snapshot.data ?? []);
+
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: TextField(
+                  decoration: const InputDecoration(
+                    hintText: 'Search by hymn number or word',
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) => setState(() => _searchQuery = value),
+                ),
+              ),
+              Expanded(
+                child: ValueListenableBuilder(
+                  valueListenable: _bookmarkService.box.listenable(),
+                  builder: (context, Box<bool> box, _) {
+                    return ListView.separated(
+                      itemCount: filteredHymns.length,
+                      separatorBuilder: (_, __) => const Divider(height: 1),
+                      itemBuilder: (context, index) {
+                        final hymn = filteredHymns[index];
+                        final bookmarked = _bookmarkService.isBookmarked(hymn.number);
+                        return ListTile(
+                          leading: SizedBox(
+                            width: 36,
+                            child: Text(
+                              '${hymn.number}',
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      title: Text(
-                        hymn.title,
-                        style: const TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      trailing: bookmarked
-                          ? Icon(Icons.bookmark,
-                              color: Theme.of(context).colorScheme.primary)
-                          : null,
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => HymnDetailScreen(hymn: hymn),
+                          title: Text(
+                            hymn.title,
+                            style: const TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
+                          trailing: bookmarked
+                              ? Icon(Icons.bookmark,
+                                  color: Theme.of(context).colorScheme.primary)
+                              : null,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => HymnDetailScreen(hymn: hymn),
+                              ),
+                            );
+                          },
                         );
                       },
                     );
                   },
-                );
-              },
-            ),
-          ),
-        ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

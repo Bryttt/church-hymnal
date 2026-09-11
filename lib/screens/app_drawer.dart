@@ -3,6 +3,8 @@ import '../theme/app_theme.dart';
 import 'mawunyonyo_screen.dart';
 import 'history_screen.dart';
 import 'bookmarks_screen.dart';
+import 'creed_screen.dart';
+import 'anthem_screen.dart';
 
 /// The slide-out menu opened from the hamburger icon on the home screen.
 /// Add or reorder menu items here — each is just an icon + label + the
@@ -25,7 +27,7 @@ class AppDrawer extends StatelessWidget {
                   Icon(Icons.church, color: AppColors.white, size: 32),
                   SizedBox(width: 12),
                   Text(
-                    'ARS Church Hymnal',
+                    'Church Hymnal',
                     style: TextStyle(
                       color: AppColors.white,
                       fontSize: 20,
@@ -37,7 +39,7 @@ class AppDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.menu_book),
-              title: const Text('Mawunyɔnyɔ'),
+              title: const Text('Mawunyonyo'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.of(context).push(
@@ -62,6 +64,26 @@ class AppDrawer extends StatelessWidget {
                 Navigator.pop(context);
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => const BookmarksScreen()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.menu_book_outlined), // bible icon
+              title: const Text('Xɔsemeʋuʋu'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const CreedScreen()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.music_note), // song icon
+              title: const Text('ARS Anthem'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const AnthemScreen()),
                 );
               },
             ),

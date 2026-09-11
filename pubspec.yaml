@@ -35,11 +35,12 @@ flutter:
   assets:
     - assets/audio/
     - assets/images/
+    - assets/data/
 
 # Config for flutter_native_splash package.
 # Run `flutter pub run flutter_native_splash:create` after adding your logo.
 flutter_native_splash:
   color: "#FFFFFF"
-  image: assets/images/church_logo.png
+  image: assets/images/ars2.png
   color_dark: "#121212"
-  image_dark: assets/images/church_logo.png
+  image_dark: assets/images/ars2.png
