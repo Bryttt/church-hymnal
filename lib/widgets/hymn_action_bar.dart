@@ -29,7 +29,7 @@ class HymnActionButton extends StatelessWidget {
       child: Material(
         color: active
             ? theme.colorScheme.primary.withOpacity(0.1)
-            : theme.colorScheme.surfaceContainerHighest.withOpacity(0.4),
+            : theme.colorScheme.surfaceVariant.withOpacity(0.4),
         borderRadius: BorderRadius.circular(AppButtonStyle.borderRadius),
         child: InkWell(
           onTap: onPressed,
@@ -42,7 +42,11 @@ class HymnActionButton extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 label,
-                style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                  fontSize: 11,
+                  color: color,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),
@@ -76,7 +80,7 @@ class HymnActionBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
       child: Row(
         children: [
           Expanded(

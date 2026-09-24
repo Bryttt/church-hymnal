@@ -13,8 +13,12 @@ class AnthemScreen extends StatelessWidget {
         padding: EdgeInsets.all(16),
         child: Text(
           '''
-The ARS Anthem lyrics go here.
-''',
+/: Agoo na nyigba:|
+Mawu ƒe gbe ɖi le yame be
+Mihɔ ketɔ la ƒe nuwo ɖa
+Mihɔ ketɔ la ƒe nuwo ɖa
+|:Dzitɔ xɔ 'ƒe fiaduƒe la
+Nusianu nezi ɖodoe:|''',
           style: TextStyle(fontSize: 16, height: 1.6),
         ),
       ),

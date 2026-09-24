@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 /// Change these two values to match your church logo exactly, and every
 /// screen updates automatically — nothing else in the app hardcodes color.
 class AppColors {
-  static const Color brandRed = const Color.fromARGB(255, 22, 2, 136);
-  static const Color brandRedDark = Color.fromARGB(255, 22, 2, 136); // used for dark mode accents
+  static const Color brandRed = Color.fromARGB(255, 3, 13, 156);
+  static const Color brandRedDark = Color.fromARGB(255, 3, 13, 156);
   static const Color white = Color(0xFFFFFFFF);
 }
 
 /// Fixed sizing for every icon button in the app (play/bookmark/share),
 /// so they're always visually consistent no matter what screen they're on.
+/// Reduced from original (56 height, 26 icon) for a more compact look.
 class AppButtonStyle {
-  static const double height = 56;
-  static const double iconSize = 26;
+  static const double height = 48;
+  static const double iconSize = 20;
   static const double borderRadius = 12;
 }
 
@@ -23,19 +24,19 @@ class AppTheme {
     useMaterial3: true,
     scaffoldBackgroundColor: AppColors.white,
     colorScheme: ColorScheme.fromSeed(
-      seedColor: const Color.fromARGB(255, 22, 2, 136),
+      seedColor: AppColors.brandRed,
       brightness: Brightness.light,
       primary: AppColors.brandRed,
       surface: AppColors.white,
     ),
     appBarTheme: const AppBarTheme(
-      backgroundColor: Color.fromARGB(255, 22, 2, 136),
+      backgroundColor: AppColors.brandRed,
       foregroundColor: AppColors.white,
       elevation: 0,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromARGB(255, 22, 2, 136),
+        backgroundColor: AppColors.brandRed,
         foregroundColor: AppColors.white,
         minimumSize: const Size.fromHeight(AppButtonStyle.height),
         shape: RoundedRectangleBorder(
@@ -54,18 +55,18 @@ class AppTheme {
     brightness: Brightness.dark,
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(
-      seedColor: const Color.fromARGB(255, 22, 2, 136),
+      seedColor: AppColors.brandRed,
       brightness: Brightness.dark,
-      primary: const Color.fromARGB(255, 22, 2, 136),
+      primary: AppColors.brandRedDark,
     ),
     appBarTheme: const AppBarTheme(
-      backgroundColor: Color.fromARGB(255, 22, 2, 136),
+      backgroundColor: AppColors.brandRedDark,
       foregroundColor: AppColors.white,
       elevation: 0,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromARGB(255, 22, 2, 136),
+        backgroundColor: AppColors.brandRedDark,
         foregroundColor: AppColors.white,
         minimumSize: const Size.fromHeight(AppButtonStyle.height),
         shape: RoundedRectangleBorder(

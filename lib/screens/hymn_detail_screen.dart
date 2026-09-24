@@ -6,10 +6,6 @@ import '../models/hymn.dart';
 import '../services/bookmark_service.dart';
 import '../widgets/hymn_action_bar.dart';
 
-/// Shows one hymn's lyrics in full, with the Play / Bookmark / Share
-/// action bar (see widgets/hymn_action_bar.dart) fixed at the top.
-/// Long hymns simply scroll — no pagination — so all stanzas are
-/// reachable by scrolling down.
 class HymnDetailScreen extends StatefulWidget {
   final Hymn hymn;
 
